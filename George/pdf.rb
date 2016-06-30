@@ -1,0 +1,1 @@
+puts "dog farts".split('').map{|m| "#{m.ord.to_s}".to_i.chr }.join('')
