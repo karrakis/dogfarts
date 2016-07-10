@@ -1,3 +1,8 @@
 # makeclass.rb
-class newShiny
+class NewShiny
+	def initialize
+		
+	end
+
 end
+
