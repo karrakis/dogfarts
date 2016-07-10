@@ -1,0 +1,1 @@
+# makeclass.rb
