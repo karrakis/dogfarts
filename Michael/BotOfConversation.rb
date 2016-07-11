@@ -1,4 +1,7 @@
 # BotOfConversation.rb
+require 'rubygems'
+require 'mysql2'
+require 'entagger'
 class TalkingBot
 	attr-accessor :subject
 	def initialize
@@ -9,7 +12,8 @@ class TalkingBot
 
 	end
 	def processing(material)
+
 	end
-	def export
+	def export(excrement)
 	end
 end
