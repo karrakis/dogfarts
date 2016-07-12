@@ -1,0 +1,1 @@
+CREATE TABLE determiner (Id INT NOT NULL AUTO_INCREMENT UNIQUE, last_used DATETIME NOT NULL, use_count INT NOT NULL, word varchar(255) NOT NULL );
