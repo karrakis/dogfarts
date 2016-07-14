@@ -4,7 +4,7 @@ require 'mysql2'
 require 'entagger'
 client = Mysql2::Client.new(:host=>"localhost", :database=>"stuff", :password=>)
 class TalkingBot
-	attr-accessor :subject
+	# attr-accessor :subject
 	def initialize
 	end
 	def receipt(input)
