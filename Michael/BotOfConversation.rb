@@ -16,6 +16,7 @@ class TalkingBot
 		tgr = EngTagger.new
 		text = material
 		tagged = tgr.add_tags(text)
+		puts tagged
 
 	end
 	def export(excrement)
