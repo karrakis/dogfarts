@@ -13,7 +13,7 @@ class TalkingBot
 
 	end
 	def processing(material)
-		client = Mysql2::Client.new(:host=>"localhost", :database=>"stuff", :password=>Jimmybob1)
+		client = Mysql2::Client.new(:host=>"localhost", :database=>"stuff", :password=>)
 		tgr = EngTagger.new
 		text = material
 		tagged = tgr.add_tags(text)
