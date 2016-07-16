@@ -12,7 +12,7 @@ class TalkingBot
 
 	end
 	def processing(material)
-		# open connection to database.
+		# open connection to database. If in prod, change creds to pull from file.
 		client = Mysql2::Client.new(:host=>"localhost", :database=>"stuff", :password=>12345, :username=>'root')
 		
 		# create tagged string from input
@@ -23,8 +23,8 @@ class TalkingBot
 		taggedArr = tagged.split(" ")
 		
 		# Testing debug statements, remove in prod.
-		puts tagged
-		puts taggedArr
+		p tagged
+		p taggedArr
 		
 		# close database connection for good measure.
 		client.close
