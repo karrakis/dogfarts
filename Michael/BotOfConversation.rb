@@ -13,7 +13,7 @@ class TalkingBot
 	end
 	def processing(material)
 		# open connection to database.
-		client = Mysql2::Client.new(:host=>"localhost", :database=>"stuff", :password=>"12345")
+		client = Mysql2::Client.new(:host=>"localhost", :database=>"stuff", :password=>12345, :username=>'root')
 		
 		# create tagged string from input
 		tgr = EngTagger.new
