@@ -12,12 +12,26 @@ class TalkingBot
 
 	end
 	def processing(material)
+		# open connection to database.
 		client = Mysql2::Client.new(:host=>"localhost", :database=>"stuff", :password=>"12345")
+		
+		# create tagged string from input
 		tgr = EngTagger.new
 		text = material
 		tagged = tgr.add_tags(text)
+
+		taggedArr = tagged.split(" ")
+		
+		# Testing debug statements, remove in prod.
 		puts tagged
+		puts taggedArr
+		
+		# close database connection for good measure.
+		client.close
+		
+		# return result, mostly for debugging.
 		return tagged
+
 
 	end
 	def export(excrement)
