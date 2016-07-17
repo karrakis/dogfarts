@@ -29,7 +29,7 @@ class TalkingBot
 			word = item[/(?<=\>).*?(?=\<)/]
 			case tag
 			when "<pp>"
-				client.query
+				client.query("")
 
 
 			p tag
