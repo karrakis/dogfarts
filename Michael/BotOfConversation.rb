@@ -22,10 +22,15 @@ class TalkingBot
 
 		taggedArr = tagged.split(" ")
 		
-		#Insert words from string into database.
+		#Insert words from string into database
+		# according to its tag designation.
 		for item in taggedArr
 			tag = item[/\<.*?\>/]
 			word = item[/(?<=\>).*?(?=\<)/]
+			case tag
+			when "<pp>"
+				client.query
+
 
 			p tag
 			p word
