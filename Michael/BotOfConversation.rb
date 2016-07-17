@@ -22,9 +22,15 @@ class TalkingBot
 
 		taggedArr = tagged.split(" ")
 		
+		#Insert words from string into database.
+		for word in taggedArr
+			tag = word[/\<.*?\>/]
+			p tag
+		end
+		
 		# Testing debug statements, remove in prod.
-		p tagged
-		p taggedArr
+		# p tagged
+		# p taggedArr
 		
 		# close database connection for good measure.
 		client.close
