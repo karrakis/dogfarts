@@ -25,11 +25,12 @@ class TalkingBot
 		#Insert words from string into database
 		# according to its tag designation.
 		for item in taggedArr
+			time = Time.new
 			tag = item[/\<.*?\>/]
 			word = item[/(?<=\>).*?(?=\<)/]
 			case tag
 			when "<pp>"
-				client.query("")
+				client.query("INSERT INTO punctuation_end (word,last_used) VALUES (#{@word}, #{@time}")
 
 
 			p tag
