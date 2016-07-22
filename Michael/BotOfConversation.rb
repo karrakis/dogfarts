@@ -30,7 +30,7 @@ class TalkingBot
 			word = item[/(?<=\>).*?(?=\<)/]
 			case tag
 			when "<pp>"
-				client.query("INSERT INTO punctuation_end (word,last_used) VALUES (#{@word},NOW())")
+				client.query("INSERT INTO punctuation_end (word,last_used) VALUES (#{@word},NOW();")
 			end
 
 			p tag
