@@ -23,7 +23,11 @@ def insultHumans
 	# Open new connection to database
 	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>12345, :username=>'root')
 
-	
+	# Get count of insults in database.
+	count = client.query("SELECT Count(insult_id) FROM insults")
+
+	return count
+end
 
 
 
