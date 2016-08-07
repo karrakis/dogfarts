@@ -1,11 +1,13 @@
 # MadnessMaethods.rb
+require 'engtagger'
+
 def intake
-	print "=>"
+	print "Sentence please =>"
 	sentence = gets.chomp
 	return sentence
 end
 
 
 def tageSentence(sentenceString)
-	
+
 
