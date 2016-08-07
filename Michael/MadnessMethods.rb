@@ -1,4 +1,5 @@
 # MadnessMaethods.rb
+require 'rubygems'
 require 'engtagger'
 
 def intake
