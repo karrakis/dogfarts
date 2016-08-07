@@ -19,5 +19,12 @@ def tagSentence(sentenceString)
 	return taggedSentence
 end
 
+def insultHumans
+	# Open new connection to database
+	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>12345, :username=>'root')
+
+	
+
+
 
 
