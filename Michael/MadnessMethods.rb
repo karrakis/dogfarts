@@ -8,6 +8,15 @@ def intake
 end
 
 
-def tageSentence(sentenceString)
+def tagSentence(sentenceString)
+	# Create tagger object instance
+	tagger = EngTagger.new
+
+	# Tag sentence parts
+	taggedSentence = tagger.add_tags(sentenceString)
+
+	return taggedSentence
+end
+
 
 
