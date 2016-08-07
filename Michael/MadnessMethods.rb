@@ -1,6 +1,7 @@
 # MadnessMaethods.rb
 require 'rubygems'
 require 'engtagger'
+require 'mysql2'
 
 def intake
 	print "Sentence please =>"
@@ -19,14 +20,16 @@ def tagSentence(sentenceString)
 	return taggedSentence
 end
 
-def insultHumans
+def insultHumans()
 	# Open new connection to database
 	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>12345, :username=>'root')
 
 	# Get count of insults in database.
-	count = client.query("SELECT Count(insult_id) FROM insults")
+	count = client.query("SELECT * FROM insults;")
 
-	return count
+	client.close
+
+	print count
 end
 
 
