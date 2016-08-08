@@ -39,7 +39,7 @@ def insultHumans()
 	# Select appropriate insult from sql
 	insult = client.query("SELECT insult_text FROM insults where insult_id='#{insultPick}'")
 
-	p insult.to_a.first['insult_text']
+	return insult.to_a.first['insult_text']
 
 
 
