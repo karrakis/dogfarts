@@ -40,16 +40,24 @@ def insultHumans()
 	insult = client.query("SELECT insult_text FROM insults where insult_id='#{insultPick}'")
 
 	return insult.to_a.first['insult_text']
-
-
-
-	
-
-	
-
 	
 end
 
 
+# Checks input text to see if it ends with punctuation.
+def containsPunctuation(inputText)
+	inputArray = inputText.split('')
+
+	p inputArray
+end
+
+def addInsult()
+	# TODO
+	insultText = gets.chomp
+	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>12345, :username=>'root')
+
+	client.query("INSERT INTO Insults (insult_text) VALUES ('#{insultText}')")
+	puts "Insult added to database. \nThank you for making the world a better worse place."
+end
 
 
