@@ -45,15 +45,25 @@ end
 
 
 # Checks input text to see if it ends with punctuation.
-def containsPunctuation(inputText)
+def endWithPunctuation(inputText)
 	inputArray = inputText.split('')
+	if inputArray[-1] == "."
+		return TRUE 
+	elsif inputArray[-1] == "?"
+		return TRUE
+	elsif inputArray[-1] == "!"
+		return TRUE
+	else
+		return FALSE
+	end	
 
-	p inputArray
+	# return inputArray
 end
 
 def addInsult()
-	# TODO
 	insultText = gets.chomp
+
+	# TODO: Add functionality to escape special characters.
 	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>12345, :username=>'root')
 
 	client.query("INSERT INTO Insults (insult_text) VALUES ('#{insultText}')")
