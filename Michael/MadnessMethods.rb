@@ -69,14 +69,13 @@ def addInsult()
 	# Modify text for sql insertion.
 	escaped = client.escape(insultText)
 
-	# TODO: Add functionality to escape special characters.
 	
 
 	client.query("INSERT INTO Insults (insult_text) VALUES ('#{escaped}')")
 	puts "Insult added to database. \nThank you for making the world a better worse place."
 end
 
-
+# Feed this method a tagged sentence to see if if contains nouns.
 def containsNoun(sentence)
 	if sentence.include? "<nn"
 		return TRUE
@@ -85,6 +84,8 @@ def containsNoun(sentence)
 	end
 end
 
+
+# Feed this method a tagged sentence to see if it contains verbs.
 def containsVerb(sentence)
 	if sentence.include? "<v"
 		return TRUE
@@ -92,6 +93,7 @@ def containsVerb(sentence)
 		return FALSE
 	end
 end
+
 
 
 
