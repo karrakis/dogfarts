@@ -85,5 +85,15 @@ def containsNoun(sentence)
 	end
 end
 
+def containsVerb(sentence)
+	if sentence.include? "<v"
+		return TRUE
+	else
+		return FALSE
+	end
+end
+
+
+
 
 
