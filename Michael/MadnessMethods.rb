@@ -77,3 +77,13 @@ def addInsult()
 end
 
 
+def containsNoun(sentence)
+	if sentence.include? "<nn"
+		return TRUE
+	else
+		return FALSE
+	end
+end
+
+
+
