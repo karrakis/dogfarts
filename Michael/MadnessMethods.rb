@@ -60,6 +60,7 @@ def endWithPunctuation(inputText)
 	# return inputArray
 end
 
+# Feed a sentence, prefferably an insulting one, to add it to the insults database.
 def addInsult()
 	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>12345, :username=>'root')
 
@@ -94,6 +95,14 @@ def containsVerb(sentence)
 	end
 end
 
+# Feed a sentence to find out if it's a question.
+def isQuestion(sentence)
+	if sentence.include? "?"
+		return TRUE
+	else
+		FALSE
+	end
+end
 
 
 
