@@ -61,12 +61,18 @@ def endWithPunctuation(inputText)
 end
 
 def addInsult()
-	insultText = gets.chomp
-
-	# TODO: Add functionality to escape special characters.
 	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>12345, :username=>'root')
 
-	client.query("INSERT INTO Insults (insult_text) VALUES ('#{insultText}')")
+	# Grab insult from user.
+	insultText = gets.chomp
+	
+	# Modify text for sql insertion.
+	escaped = client.escape(insultText)
+
+	# TODO: Add functionality to escape special characters.
+	
+
+	client.query("INSERT INTO Insults (insult_text) VALUES ('#{escaped}')")
 	puts "Insult added to database. \nThank you for making the world a better worse place."
 end
 
