@@ -189,4 +189,44 @@ class RachelsFartBot
 		return answer
 
 	end
+
+	def process_question(question)
+
+		regex = turn_to_string
+		check_the_thing(regex,question)
+
+	end
+
+	def turn_to_string
+
+		#Turn the question types table into a string for matching purposes
+
+		qtypes = @client.query("SELECT qstart FROM question_types;").to_a
+		array = qtypes.map{|m| m["qstart"]}
+		string = array.join('\\b|\\b')
+		regex = Regexp.new("(?<qstart>\\b#{string}\\b)",Regexp::IGNORECASE)
+		return(regex)
+
+	end
+
+	def check_the_thing(regex,question)
+
+		qtype = question.match(regex).to_s
+		puts(qtype)
+		split_question = question.split(regex)
+		#qtype(split_question)
+
+		if qtype == "Who"
+			who_question(qtype,split_question)
+		else
+			err_handler(question)
+		end
+
+	end
+
+	def who_question(qtype,split_question)
+
+		answer = @client.query("SELECT name FROM people ORDER BY RAND() LIMIT 1;").to_a.first["name"]
+
+	end
 end
