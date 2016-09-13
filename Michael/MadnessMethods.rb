@@ -104,6 +104,23 @@ def isQuestion(sentence)
 	end
 end
 
+# Input an untagged question sentence to find out whether bot
+# should supply definition type response.
+
+def defQuestion(sentence)
+	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>12345, :username=>'root')
+	queryResult = client.query("SELECT word FROM defQuestionWords")
+	queryResultArray = queryResult
+	target = Array.new()
+	for i in queryResultArray
+		
+		target << "\\b"+i["word"]+"\\b"
+	end
+	optic = Regexp.new(target.join("|"))
+	# TODO run match against optic.
+end
+
+
 
 
 
