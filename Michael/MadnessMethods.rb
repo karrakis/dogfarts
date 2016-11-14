@@ -4,7 +4,7 @@ require 'engtagger'
 require 'mysql2'
 
 # Mehtod to take in a sentence string from the user.
-def intake
+def intake()
 	print "Sentence please =>"
 	sentence = gets.chomp
 	return sentence
@@ -24,7 +24,7 @@ end
 # Method to insult user when an improper input has been provided, or when I please.
 def insultHumans()
 	# Open new connection to database
-	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>12345, :username=>'root')
+	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>'Th1ngs @nd Stuff', :username=>'root')
 
 	# Get count of insults in database.
 	countQuery = client.query("SELECT COUNT(*) as c FROM insults")
@@ -62,7 +62,7 @@ end
 
 # Feed a sentence, prefferably an insulting one, to add it to the insults database.
 def addInsult()
-	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>12345, :username=>'root')
+	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>'Th1ngs @nd Stuff', :username=>'root')
 
 	# Grab insult from user.
 	insultText = gets.chomp
@@ -108,7 +108,7 @@ end
 # should supply definition type response.
 
 def defQuestion(sentence)
-	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>12345, :username=>'root')
+	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>'Th1ngs @nd Stuff', :username=>'root')
 	queryResult = client.query("SELECT word FROM defQuestionWords")
 	queryResultArray = queryResult
 	target = Array.new()
@@ -119,6 +119,7 @@ def defQuestion(sentence)
 	optic = Regexp.new(target.join("|"))
 	# TODO run match against optic.
 end
+
 
 
 
