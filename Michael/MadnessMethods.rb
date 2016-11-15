@@ -120,8 +120,17 @@ def defQuestion(sentence)
 	# TODO run match against optic.
 end
 
+# Stashes unhandled untagged sentence for later analysis
+def stashForAnalysis(sentence)
+	
+	# Open connection object to sql
+	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>'Th1ngs @nd Stuff', :username=>'root')
 
+	# Place sentence into variable that mysql2 can handle.
+	escaped = client.escape(sentence)
 
+	# Insert sentence into analysis database.
+	client.query("INSERT INTO AnalyzeSentence (Sentence) VALUES ('#{escaped}'')")
 
 
 
