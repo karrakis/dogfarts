@@ -130,8 +130,8 @@ def stashForAnalysis(sentence)
 	escaped = client.escape(sentence)
 
 	# Insert sentence into analysis database.
-	client.query("INSERT INTO AnalyzeSentence (Sentence) VALUES ('#{escaped}'')")
-
+	client.query("INSERT INTO AnalyzeSentence (Sentence) VALUES ('#{escaped}')")
+end
 
 
 
