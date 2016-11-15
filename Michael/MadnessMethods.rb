@@ -131,7 +131,11 @@ def stashForAnalysis(sentence)
 
 	# Insert sentence into analysis database.
 	client.query("INSERT INTO AnalyzeSentence (Sentence) VALUES ('#{escaped}')")
+
 end
+
+def defQuestionAnswer(wordToDefine)
+	
 
 
 
