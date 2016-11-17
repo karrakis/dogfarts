@@ -2,6 +2,7 @@
 require 'rubygems'
 require 'engtagger'
 require 'mysql2'
+require 'httparty'
 
 # Mehtod to take in a sentence string from the user.
 def intake()
@@ -134,8 +135,21 @@ def stashForAnalysis(sentence)
 
 end
 
+
+# Send API call to merriam webster and retrieve definition for supplied word.
 def defQuestionAnswer(wordToDefine)
 	
+	word = wordToDefine
 
+	
+
+	request = HTTParty.get("http://www.dictionaryapi.com/api/v1/references/collegiate/xml/#{word}?key=e1370b7d-69b3-468e-a867-5b876ead2bf3", followlocation: true)
+
+	
+
+	p request
+
+	return request
+end
 
 
