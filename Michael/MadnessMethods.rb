@@ -143,13 +143,15 @@ def defQuestionAnswer(wordToDefine)
 
 	
 
-	request = HTTParty.get("http://www.dictionaryapi.com/api/v1/references/collegiate/xml/#{word}?key=e1370b7d-69b3-468e-a867-5b876ead2bf3", followlocation: true)
+	request = HTTParty.get("http://www.dictionaryapi.com/api/v1/references/collegiate/xml/#{word}?key=e1370b7d-69b3-468e-a867-5b876ead2bf3")
+
+	doc = Nokogiri::XML(request.body)
+
+	defArray = doc.xpath("//dt").to_a
 
 	
 
-	p request
-
-	return request
+	return defArray[0]
 end
 
 
