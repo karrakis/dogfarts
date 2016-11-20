@@ -3,6 +3,7 @@ require 'rubygems'
 require 'engtagger'
 require 'mysql2'
 require 'httparty'
+require 'nokogiri'
 
 # Mehtod to take in a sentence string from the user.
 def intake()
