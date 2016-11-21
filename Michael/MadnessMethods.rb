@@ -149,7 +149,8 @@ def defQuestionAnswer(wordToDefine)
 	doc = Nokogiri::XML(request.body)
 
 	defArray = doc.xpath("//dt").to_a
-
+	
+	
 	
 
 	return defArray[0]
