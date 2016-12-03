@@ -162,7 +162,7 @@ def returnPerson()
 
 	# Get count of all the name entries in the database.
 	nameCount = client.query('SELECT COUNT(Name) FROM chatbot.People').to_a.first
-(
+
 	# Get number for id count 
 	idNum = nameCount[COUNT(Name)]
 
