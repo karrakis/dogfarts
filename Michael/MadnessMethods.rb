@@ -161,12 +161,20 @@ def returnPerson()
 	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>'Th1ngs @nd Stuff', :username=>'root')
 
 	# Get count of all the name entries in the database.
-	nameCount = client.query('SELECT COUNT(Name) FROM chatbot.People')
+	nameCount = client.query('SELECT COUNT(Name) FROM chatbot.People').to_a.first
+(
+	# Get number for id count 
+	idNum = nameCount[COUNT(Name)]
 
 	# SELECT random number from range of names in datbase.
-	id = rand(1..nameCount)
+	id = rand(1..idNum)
 
 	# Return name associated with random number choice from database.
-	randomName = client.query("SELECT Name FROM chatbot.People WHERE ID = '#{id}'")
+	queryResult = client.query("SELECT Name FROM chatbot.People WHERE ID = '#{id}'").to_a.first
+
+	randomName = queryResult["Name"]
+
+	client.close()
 
 	return randomName
+end
