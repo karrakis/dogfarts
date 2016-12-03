@@ -74,7 +74,7 @@ def addInsult()
 
 	
 
-	client.query("INSERT INTO Insults (insult_text) VALUES ('#{escaped}')")
+	client.query("INSERT INTO insults (insult_text) VALUES ('#{escaped}')")
 	puts "Insult added to database. \nThank you for making the world a better worse place."
 end
 
