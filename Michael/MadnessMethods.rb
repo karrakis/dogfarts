@@ -164,7 +164,7 @@ def returnPerson()
 	nameCount = client.query('SELECT COUNT(Name) FROM chatbot.People').to_a.first
 
 	# Get number for id count 
-	idNum = nameCount[COUNT(Name)]
+	idNum = nameCount["COUNT(Name)"]
 
 	# SELECT random number from range of names in datbase.
 	id = rand(1..idNum)
@@ -172,7 +172,7 @@ def returnPerson()
 	# Return name associated with random number choice from database.
 	queryResult = client.query("SELECT Name FROM chatbot.People WHERE ID = '#{id}'").to_a.first
 
-	randomName = queryResult["Name"]
+	randomName = queryResult["Name"].downcase.capitalize
 
 	client.close()
 
