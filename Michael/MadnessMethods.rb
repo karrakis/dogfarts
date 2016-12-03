@@ -156,6 +156,8 @@ def defQuestionAnswer(wordToDefine)
 	return defArray[0]
 end
 
+
+# Returns random male or female name from table.
 def returnPerson()
 	# Open connection object to sql
 	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>'Th1ngs @nd Stuff', :username=>'root')
