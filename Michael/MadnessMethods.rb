@@ -156,4 +156,17 @@ def defQuestionAnswer(wordToDefine)
 	return defArray[0]
 end
 
+def returnPerson()
+	# Open connection object to sql
+	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>'Th1ngs @nd Stuff', :username=>'root')
 
+	# Get count of all the name entries in the database.
+	nameCount = client.query('SELECT COUNT(Name) FROM chatbot.People')
+
+	# SELECT random number from range of names in datbase.
+	id = rand(1..nameCount)
+
+	# Return name associated with random number choice from database.
+	randomName = client.query("SELECT Name FROM chatbot.People WHERE ID = '#{id}'")
+
+	return randomName
