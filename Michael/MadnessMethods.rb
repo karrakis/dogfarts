@@ -2,9 +2,11 @@
 require 'rubygems'
 require 'engtagger'
 require 'mysql2'
+require 'httparty'
+require 'nokogiri'
 
 # Mehtod to take in a sentence string from the user.
-def intake
+def intake()
 	print "Sentence please =>"
 	sentence = gets.chomp
 	return sentence
@@ -24,7 +26,7 @@ end
 # Method to insult user when an improper input has been provided, or when I please.
 def insultHumans()
 	# Open new connection to database
-	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>12345, :username=>'root')
+	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>'Th1ngs @nd Stuff', :username=>'root')
 
 	# Get count of insults in database.
 	countQuery = client.query("SELECT COUNT(*) as c FROM insults")
@@ -62,7 +64,7 @@ end
 
 # Feed a sentence, prefferably an insulting one, to add it to the insults database.
 def addInsult()
-	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>12345, :username=>'root')
+	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>'Th1ngs @nd Stuff', :username=>'root')
 
 	# Grab insult from user.
 	insultText = gets.chomp
@@ -72,7 +74,7 @@ def addInsult()
 
 	
 
-	client.query("INSERT INTO Insults (insult_text) VALUES ('#{escaped}')")
+	client.query("INSERT INTO insults (insult_text) VALUES ('#{escaped}')")
 	puts "Insult added to database. \nThank you for making the world a better worse place."
 end
 
@@ -104,7 +106,97 @@ def isQuestion(sentence)
 	end
 end
 
+# Input an untagged question sentence to find out whether bot
+# should supply definition type response.
+
+def defQuestion(sentence)
+	sentence = sentence.downcase
+	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>'Th1ngs @nd Stuff', :username=>'root')
+	queryResult = client.query("SELECT word FROM defQuestionWords")
+	queryResultArray = queryResult
+	target = Array.new()
+	for i in queryResultArray
+		
+		target << "\\b"+i["word"]+"\\b"
+	end
+	optic = Regexp.new(target.join("|"))
+	# TODO run match against optic.
+	
+	if (optic =~ (sentence)) then
+		return true
+
+	else
+		return false
+
+		
+	end
+	client.close()
+end
+
+# Stashes unhandled untagged sentence for later analysis
+def stashForAnalysis(sentence)
+	
+	# Open connection object to sql
+	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>'Th1ngs @nd Stuff', :username=>'root')
+
+	# Place sentence into variable that mysql2 can handle.
+	escaped = client.escape(sentence)
+
+	# Insert sentence into analysis database.
+	client.query("INSERT INTO AnalyzeSentence (Sentence) VALUES ('#{escaped}')")
+
+end
 
 
+# Send API call to merriam webster and retrieve definition for supplied word.
+def defQuestionAnswer(wordToDefine)
+	
+	word = wordToDefine
+
+	
+
+	request = HTTParty.get("http://www.dictionaryapi.com/api/v1/references/collegiate/xml/#{word}?key=e1370b7d-69b3-468e-a867-5b876ead2bf3")
+
+	doc = Nokogiri::XML(request.body)
+
+	defArray = doc.xpath("//dt/text()").to_a
+	
+	
+	
+
+	return defArray[0]
+end
 
 
+# Returns random male or female name from table.
+def returnPerson()
+	# Open connection object to sql
+	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>'Th1ngs @nd Stuff', :username=>'root')
+
+	# Get count of all the name entries in the database.
+	nameCount = client.query('SELECT COUNT(Name) FROM chatbot.People').to_a.first
+
+	# Get number for id count 
+	idNum = nameCount["COUNT(Name)"]
+
+	# SELECT random number from range of names in datbase.
+	id = rand(1..idNum)
+
+	# Return name associated with random number choice from database.
+	queryResult = client.query("SELECT Name FROM chatbot.People WHERE ID = '#{id}'").to_a.first
+
+	randomName = queryResult["Name"].downcase.capitalize
+
+	client.close()
+
+	return randomName
+end
+
+def supplyTime()
+	currentTime = Time.now
+
+	timeStatement = "The time is " + currentTime.inspect
+
+	puts timeStatement
+
+end
