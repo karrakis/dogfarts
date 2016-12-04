@@ -110,6 +110,7 @@ end
 # should supply definition type response.
 
 def defQuestion(sentence)
+	sentence = sentence.downcase
 	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>'Th1ngs @nd Stuff', :username=>'root')
 	queryResult = client.query("SELECT word FROM defQuestionWords")
 	queryResultArray = queryResult
@@ -120,6 +121,16 @@ def defQuestion(sentence)
 	end
 	optic = Regexp.new(target.join("|"))
 	# TODO run match against optic.
+	
+	if (optic =~ (sentence)) then
+		return true
+
+	else
+		return false
+
+		
+	end
+	client.close()
 end
 
 # Stashes unhandled untagged sentence for later analysis
@@ -189,4 +200,3 @@ def supplyTime()
 	puts timeStatement
 
 end
-
