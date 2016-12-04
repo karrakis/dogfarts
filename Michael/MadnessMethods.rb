@@ -180,3 +180,13 @@ def returnPerson()
 
 	return randomName
 end
+
+def supplyTime()
+	currentTime = Time.now
+
+	timeStatement = "The time is " + currentTime.inspect
+
+	puts timeStatement
+
+end
+
