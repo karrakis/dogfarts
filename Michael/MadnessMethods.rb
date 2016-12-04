@@ -133,7 +133,7 @@ def defQuestion(sentence)
 	client.close()
 end
 
-def personQuestionAnswer(sentence)
+def personQuestion(sentence)
 	sentence = sentence.downcase
 	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>'Th1ngs @nd Stuff', :username=>'root')
 	queryResult = client.query("SELECT word FROM personQuestionWords")
