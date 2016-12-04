@@ -22,16 +22,20 @@ class RachelsFartBot
 
 	def processing(sentence)
 
-		p(sentence)
 		sentence = cleanup(sentence)
-		p(sentence)
-		tagger(sentence)
-		export(sentence)
+		subjects = tagger(sentence)
+		full_question = question(sentence)
+		check_input_redundancy(full_question,subjects)
+		answer = process_question(full_question)
+		export(answer)
 
 	end
 
 	def export(output)
 
+		subjects = tagger(output)
+		database_update_output_sentence(output)
+		database_update_output_subject(subjects)
 		puts(output)
 
 	end
@@ -40,7 +44,6 @@ class RachelsFartBot
 
 		# Clean up input
 		
-		p(sentence)
 		sentence.gsub(/([\\\;\"\'\(\)\[\]\{\}\|])+/, "")
 
 	end
@@ -52,17 +55,19 @@ class RachelsFartBot
 
 		tgr = EngTagger.new
 		tagged = tgr.add_tags(sentence)
-		p(tagged)
 
 		# Pull all nouns and noun phrases
-		# Need to save to database
 
 		wordlist = tgr.get_words(sentence)
-		p(wordlist)
 
 		# Divide out the sentences
 
 		sentences = tgr.get_sentences(sentence)
+
+		# Load inputs to database
+
+		database_update_input_subject(wordlist)
+		return wordlist
 
 	end
 
@@ -72,7 +77,7 @@ class RachelsFartBot
 
 		tgr = EngTagger.new
 
-		#Figure out question
+		# Figure out question
 
 		sentences = tgr.get_sentences(sentence)
 
@@ -98,9 +103,7 @@ class RachelsFartBot
 		end
 
 		partial_question = sentence_info.select{|h| h["is_question"] == true}.sort_by{|h| h["sentence_number"]}.last
-		p(partial_question)
 		sentence_before = sentence_info.select{|h| h["sentence_number"] == partial_question["sentence_number"] - 1}.sort_by{|h| h["sentence_number"]}.last
-		p(sentence_before)
 		if partial_question["is_complete"] == true
 			full_question = partial_question["sentence"]
 		elsif sentence_before["is_complete"] == true
@@ -109,46 +112,75 @@ class RachelsFartBot
 			err_handler
 		end
 
+		database_update_input_sentence(full_question)
 		return full_question
 		
 	end
 
 	def err_handler(garbled)
 
-		#if err_handler is called, select a random sentence to output
+		# If err_handler is called, select a random sentence to output
 
 		output = @client.query("SELECT random_sentence FROM random_sentence ORDER BY RAND() LIMIT 1;").to_a.first["random_sentence"]
-		#puts(output)
 
 	end
 
-	def database_update_inputs(sentence, subject)
+	def database_update_input_sentence(sentence)
 
-		#enters input sentence and subject into the database		
+		# Enters input sentence into the database		
 
 		@client.query("INSERT INTO input_sentences (sentence, num_uses) VALUES ('#{sentence}','1') ON DUPLICATE KEY UPDATE num_uses=num_uses+1")
-		@client.query("INSERT INTO input_subjects (subject, num_uses) VALUES ('#{subject}','1') ON DUPLICATE KEY UPDATE num_uses=num_uses+1")
 		
 	end
 
-	def database_update_outputs(output, subject)
+	def database_update_input_subject(subject)
 
-		#enters output sentence and subject into the database	
+		# Enters input subject into the database		
+
+		subject = subject.reject{|k,v| v == 0 }.keys
+		subject.each do |sbj|
+			@client.query("INSERT INTO input_subjects (subject, num_uses) VALUES ('#{sbj}','1') ON DUPLICATE KEY UPDATE num_uses=num_uses+1")
+		end
+
+	end
+
+	def database_update_output_sentence(output)
+
+		# Enters output sentence into the database	
 
 		@client.query("INSERT INTO output_sentences (sentence, num_uses) VALUES ('#{output}','1') ON DUPLICATE KEY UPDATE num_uses=num_uses+1")
-		@client.query("INSERT INTO output_subjects (subject, num_uses) VALUES ('#{subject}','1') ON DUPLICATE KEY UPDATE num_uses=num_uses+1")
+
+	end
+
+	def database_update_output_subject(subject)
+
+		# Enters output subject into the database	
+
+		subject = subject.reject{|k,v| v == 0 }.keys
+		subject.each do |sbj|
+			@client.query("INSERT INTO output_subjects (subject, num_uses) VALUES ('#{sbj}','1') ON DUPLICATE KEY UPDATE num_uses=num_uses+1")
+		end
 
 	end
 
 	def check_input_redundancy(sentence,subject)
 
-		#checks input sentence and subject to see if they've been used before
-		#if input sentence is a repeat, answer as before but angry
-		#if subject is getting old, answer the question and then change the subject
+		# Checks input sentence and subject to see if they've been used before
+		# If input sentence is a repeat, answer as before but angry
+		# If subject is getting old, answer the question and then change the subject
 
-		subject_repeat = @client.query("SELECT num_uses FROM input_subjects WHERE subject='#{subject}'").to_a.first["num_uses"]
+		subject = subject.reject{|k,v| v == 0 }.keys
+		subject_repeat = 0
+		subject.each do |sbj|
+			subject_repeat = @client.query("SELECT num_uses FROM input_subjects WHERE subject='#{sbj}'").to_a.first["num_uses"]
+			if subject_repeat > @MAXUSES
+				break
+			end
+		end
+
 		sentence_repeat = @client.query("SELECT num_uses FROM input_sentences WHERE sentence='#{sentence}'").to_a.first["num_uses"]
 		id = @client.query("SELECT id FROM input_sentences WHERE sentence='#{sentence}'").first["id"]
+
 		if sentence_repeat > 1
 			get_angry(id,sentence,sentence_repeat)
 			add_something_maybe(sentence,subject)
@@ -163,18 +195,18 @@ class RachelsFartBot
 
 	def get_angry(id,sentence,num_uses)
 
-		#figure out what I said last time this was asked and make the first character lowercase
+		# Figure out what I said last time this was asked and make the first character lowercase
 		query = "SELECT sentence FROM output_sentences WHERE created_at >= (SELECT created_at FROM input_sentences WHERE id ='#{id}') ORDER BY created_at asc limit 1;"
 		previous_response = @client.query(query).first['sentence']
 		previous_response[0] = previous_response[0].downcase
 		
-		#responses depending on the number of times it's been asked
+		# Responses depending on the number of times it's been asked
 
 		second_response = ["I already told you: " + previous_response, "Like I said before, " + previous_response, "Just like last time you asked, " + previous_response]
 		n_response = ["Dude, I've already answered this " + (num_uses - 1).to_s + " times before, but " + previous_response, "This question is getting really old.  I said: " + previous_response, "Do you actually have a memory? I told you " + previous_response]
 		too_many_response = ["I already told you.","Most cats are smarter than you are.  Stop asking me that.", "I'm done."]
 
-		#choose a response
+		# Choose a response
 
 		if num_uses == 2
 			answer = second_response.sample
@@ -212,9 +244,7 @@ class RachelsFartBot
 	def check_the_thing(regex,question)
 
 		qtype = question.match(regex).to_s
-		puts(qtype)
 		split_question = question.split(regex)
-		return(split_question)
 
 		if qtype == "Who"
 			who_question(qtype,split_question)
@@ -222,6 +252,8 @@ class RachelsFartBot
 			where_question(qtype,split_question)
 		elsif qtype == "when"
 			when_question(qtype,split_question)
+		elsif qtype == "Why"
+			why_question(qtype,split_question)
 		else
 			err_handler(question)
 		end
@@ -257,6 +289,7 @@ class RachelsFartBot
 		#answer questions about "when," which may be asking about a time or about "when you..."
 
 		if split_question[-1].incude? #need to keep working here
+		end
 
 	end
 end
