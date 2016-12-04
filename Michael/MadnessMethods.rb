@@ -133,6 +133,38 @@ def defQuestion(sentence)
 	client.close()
 end
 
+def personQuestionAnswer(sentence)
+	sentence = sentence.downcase
+	client = Mysql2::Client.new(:host=>"localhost", :database=>"chatbot", :password=>'Th1ngs @nd Stuff', :username=>'root')
+	queryResult = client.query("SELECT word FROM personQuestionWords")
+	queryResultArray = queryResult
+	
+	# create array from query result
+	target = Array.new()
+	
+	# populate array with pipe delimited data from query.
+	for i in queryResultArray
+		
+		target << "\\b"+i["word"]+"\\b"
+	end
+	
+	# create regex filter looking for words in sentence, non-exclusive or.
+	optic = Regexp.new(target.join("|"))
+	# run match against optic.
+	
+	if (optic =~ (sentence)) then
+		return true
+
+	else
+		return false
+
+		
+	end
+	client.close()
+end	
+
+
+
 # Stashes unhandled untagged sentence for later analysis
 def stashForAnalysis(sentence)
 	
