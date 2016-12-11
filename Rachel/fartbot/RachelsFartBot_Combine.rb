@@ -10,6 +10,8 @@ class RachelsFartBot
 		@client = Mysql2::Client.new(:host => "localhost", :database=>"rachels_dog_farts", :password=>"stinkydogfarts", :username => 'root')
 		#define the number of times a subject can be used as the input
 		@MAXUSES = 4
+		@percent_same_subject = 70
+		@percent_ask_question = 70
 
 	end
 
@@ -292,4 +294,36 @@ class RachelsFartBot
 		end
 
 	end
+
+	def add_something_maybe(subject)
+
+		# Sometimes add something after answering the question
+
+		if rand(100) <= @percent_same_subject
+			if rand(100) <= @percent_ask_question
+				ask_question(subject)
+			else
+				make_statement(subject)
+			end
+		else
+
+			new_subject = @client.query("SELECT subject FROM subjects ORDER BY RAND() LIMIT 1;").to_a.first["subject"]
+
+			if rand(100) <= @percent_ask_question
+				ask_question(new_subject)
+			else
+				make_statement(new_subject)
+			end
+		end
+
+	end
+
+	def ask_question(subject)
+
+		# Ask a question about a given subject
+
+		
+
+	end
+
 end
